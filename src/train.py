@@ -52,7 +52,7 @@ if __name__ == "__main__":
     parser.add_argument("--test", action="store_true", default=False)
     args = parser.parse_args()
 
-    os.makedirs('evaluation', exist_ok:True)
+    os.makedirs('evaluation', exist_ok=True)
 
     if args.train:
         train_ds, test_ds, ds_info = generator.build_dataset()
