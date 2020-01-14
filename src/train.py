@@ -14,22 +14,23 @@ CHECKPOINT_PATH = os.path.join('.', 'evaluation', 'checkpoint_weights.hdf5')
 
 def train_model(train_ds, test_ds, learning_rate=0.001):
     model = mb.build_model(learning_rate=learning_rate)
+    model.summary()
 
     callbacks = [
         ModelCheckpoint(
             filepath=CHECKPOINT_PATH,
-            monitor='val_loss',
+            monitor='val_accuracy',
             save_best_only=True,
             save_weights_only=True,
             verbose=1),
         EarlyStopping(
-            monitor='val_loss',
+            monitor='val_accuracy',
             min_delta=1e-8,
             patience=10,
             restore_best_weights=True,
             verbose=1),
         ReduceLROnPlateau(
-            monitor='val_loss',
+            monitor='val_accuracy',
             min_delta=1e-8,
             factor=0.2,
             patience=5,
@@ -68,16 +69,24 @@ if __name__ == "__main__":
 
         min_val_loss = min(val_loss)
         min_val_loss_i = val_loss.index(min_val_loss)
+        
+        accuracy = h.history['accuracy']
+        val_accuracy = h.history['val_accuracy']
+        
+        max_val_acc = max(val_accuracy)
+        max_val_acc_i = val_accuracy.index(min_val_acc)
 
         time_epoch = (total_time / len(loss))
 
         t_corpus = "\n".join([
-            "Batch:                   {}\n".format(BATCH_SIZE),
+            "Batch:                   {}\n".format(c.BATCH_SIZE),
             "Time per epoch:          {}".format(time_epoch),
             "Total epochs:            {}".format(len(loss)),
             "Best epoch               {}\n".format(min_val_loss_i + 1),
             "Training loss:           {}".format(loss[min_val_loss_i]),
             "Validation loss:         {}".format(min_val_loss),
+            "Training accuracy:           {}".format(accuracy[max_val_acc_i]),
+            "Validation accuracy:         {}".format(max_val_acc),
         ])
 
         with open(os.path.join('.', 'evaluation', 'train.txt'), "w") as f:
