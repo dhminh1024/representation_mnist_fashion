@@ -4,8 +4,6 @@ import tensorflow as tf
 import tensorflow_datasets as tfds
 import config as c
 
-import matplotlib.pyplot as plt
-
 tfds.disable_progress_bar()
 dataset_name = 'fashion_mnist'
 labels_text = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat', 'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
